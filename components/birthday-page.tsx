@@ -64,10 +64,8 @@ export default function BirthdayPage() {
   const [photos, setPhotos] = useState<Photo[]>(DEFAULT_PHOTOS)
 
   const [isMusicDialogOpen, setIsMusicDialogOpen] = useState(false)
+  const [musicUrl, setMusicUrl] = useState<string | null>("/music/birthday.mp3")
   const [tempMusicUrl, setTempMusicUrl] = useState("")
-  const [musicUrl, setMusicUrl] = useState("/music/birthday.mp3")
-
-
   const [isMuted, setIsMuted] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
   const audioRef = useRef<HTMLAudioElement | null>(null)
@@ -161,16 +159,15 @@ export default function BirthdayPage() {
   return (
     <div className="min-h-screen birthday-shimmer birthday-noise overflow-hidden">
       {musicUrl && (
-        <audio
-  ref={audioRef}
-  loop
-  muted={isMuted}
-  onPlay={() => setIsPlaying(true)}
-  onPause={() => setIsPlaying(false)}
->
-  <source src={musicUrl} type="audio/mpeg" />
-</audio>
-      )}
+  <audio
+    ref={audioRef}
+    src={musicUrl}
+    loop
+    muted={isMuted}
+    onPlay={() => setIsPlaying(true)}
+    onPause={() => setIsPlaying(false)}
+  />
+)}
 
       {/* Floating Background Images */}
       <div
@@ -246,7 +243,8 @@ export default function BirthdayPage() {
                       variant="ghost"
                       className="rounded-full"
                       onClick={() => {
-                        
+                      setTempMusicUrl(musicUrl || "")
+                      setIsMusicDialogOpen(true)
                       }}
                       data-testid="button-music-edit"
                     >
@@ -258,9 +256,9 @@ export default function BirthdayPage() {
                   <Button
                     className="rounded-full bg-gradient-to-r from-yellow-400 to-yellow-500 shadow-[0_14px_30px_rgba(218,165,32,0.22)] hover:from-yellow-400 hover:to-yellow-500"
                     onClick={() => {
-                      setTempMusicUrl("")
-                      setIsMusicDialogOpen(true)
-                    }}
+                    setTempMusicUrl(musicUrl || "")
+                    setIsMusicDialogOpen(true)
+                 }}
                     data-testid="button-music-open"
                   >
                     <Music className="mr-2 h-4 w-4" />
@@ -540,20 +538,20 @@ export default function BirthdayPage() {
 
             <div className="flex gap-2">
               <Button
-                variant="secondary"
-                className="flex-1 rounded-2xl"
-                onClick={() => setIsMusicDialogOpen(false)}
-                data-testid="button-music-cancel"
-              >
-                Batal
-              </Button>
-              <Button
-                className="flex-1 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-400 hover:to-yellow-500"
-                data-testid="button-music-apply"
-              >
-                <Music className="mr-2 h-4 w-4" />
-                Pakai Musik
-              </Button>
+  className="flex-1 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-400 hover:to-yellow-500"
+  onClick={() => {
+    const trimmed = tempMusicUrl.trim()
+    if (!trimmed) return
+
+    setMusicUrl(trimmed)
+    setIsMusicDialogOpen(false)
+    setIsPlaying(false)
+  }}
+  data-testid="button-music-apply"
+>
+  <Music className="mr-2 h-4 w-4" />
+  Pakai Musik
+</Button>
             </div>
           </div>
 
@@ -631,12 +629,10 @@ export default function BirthdayPage() {
               </Button>
               <Button
   className="flex-1 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-400 hover:to-yellow-500"
-  onClick={() => {
-  setTempMusicUrl(musicUrl)
-  setIsMusicDialogOpen(true)
-  }}
-  data-testid="button-music-apply"
+  onClick={savePhotoEdit}
+  data-testid="button-photo-edit-save"
 >
+ 
                 <Check className="mr-2 h-4 w-4" />
                 Simpan
               </Button>
