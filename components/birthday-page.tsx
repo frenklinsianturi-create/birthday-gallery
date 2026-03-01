@@ -37,36 +37,12 @@ type Photo = {
 }
 
 const DEFAULT_PHOTOS: Photo[] = [
-  {
-    id: 1,
-    url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=1200&fit=crop",
-    label: "Foto 1",
-  },
-  {
-    id: 2,
-    url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200&h=1200&fit=crop",
-    label: "Foto 2",
-  },
-  {
-    id: 3,
-    url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=1200&fit=crop",
-    label: "Foto 3",
-  },
-  {
-    id: 4,
-    url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200&h=1200&fit=crop",
-    label: "Foto 4",
-  },
-  {
-    id: 5,
-    url: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=1200&h=1200&fit=crop",
-    label: "Foto 5",
-  },
-  {
-    id: 6,
-    url: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=1200&h=1200&fit=crop",
-    label: "Foto 6",
-  },
+  { id: 1, url: "/images/1.jpg", label: "Bahagianyoo borseg😂" },
+  { id: 2, url: "/images/2.jpg", label: "Bersama Tondap😤" },
+  { id: 3, url: "/images/3.jpg", label: "Gatau ini kapan🤔" },
+  { id: 4, url: "/images/4.jpg", label: "Sebelahnya kucrop🤣" },
+  { id: 5, url: "/images/5.jpg", label: "ANJAYY Sipinsur😱" },
+  { id: 6, url: "/images/6.jpg", label: "Natal Edition🥰" },
 ]
 
 function clampText(s: string, max = 90) {
@@ -89,7 +65,8 @@ export default function BirthdayPage() {
 
   const [isMusicDialogOpen, setIsMusicDialogOpen] = useState(false)
   const [tempMusicUrl, setTempMusicUrl] = useState("")
-  const [musicUrl, setMusicUrl] = useState<string>("")
+  const [musicUrl, setMusicUrl] = useState("/music/birthday.mp3")
+
 
   const [isMuted, setIsMuted] = useState(false)
   const [isPlaying, setIsPlaying] = useState(false)
@@ -121,23 +98,6 @@ export default function BirthdayPage() {
       emoji: ["🎂", "🎉", "🎁", "✨", "💛", "🎈", "🎊", "💕"][i],
     }))
   }, [])
-
-  const applyMusic = () => {
-    const url = tempMusicUrl.trim()
-    if (!url) return
-    setMusicUrl(url)
-    setIsMusicDialogOpen(false)
-
-    window.setTimeout(() => {
-      if (!audioRef.current) return
-      audioRef.current
-        .play()
-        .then(() => setIsPlaying(true))
-        .catch(() => {
-          setIsPlaying(false)
-        })
-    }, 50)
-  }
 
   const togglePlay = () => {
     if (!audioRef.current) return
@@ -202,15 +162,14 @@ export default function BirthdayPage() {
     <div className="min-h-screen birthday-shimmer birthday-noise overflow-hidden">
       {musicUrl && (
         <audio
-          ref={audioRef}
-          loop
-          muted={isMuted}
-          onPlay={() => setIsPlaying(true)}
-          onPause={() => setIsPlaying(false)}
-          data-testid="audio-background"
-        >
-          <source src={musicUrl} type="audio/mpeg" />
-        </audio>
+  ref={audioRef}
+  loop
+  muted={isMuted}
+  onPlay={() => setIsPlaying(true)}
+  onPause={() => setIsPlaying(false)}
+>
+  <source src={musicUrl} type="audio/mpeg" />
+</audio>
       )}
 
       {/* Floating Background Images */}
@@ -287,8 +246,7 @@ export default function BirthdayPage() {
                       variant="ghost"
                       className="rounded-full"
                       onClick={() => {
-                        setTempMusicUrl(musicUrl)
-                        setIsMusicDialogOpen(true)
+                        
                       }}
                       data-testid="button-music-edit"
                     >
@@ -591,7 +549,6 @@ export default function BirthdayPage() {
               </Button>
               <Button
                 className="flex-1 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-400 hover:to-yellow-500"
-                onClick={applyMusic}
                 data-testid="button-music-apply"
               >
                 <Music className="mr-2 h-4 w-4" />
@@ -673,10 +630,13 @@ export default function BirthdayPage() {
                 Batal
               </Button>
               <Button
-                className="flex-1 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-400 hover:to-yellow-500"
-                onClick={savePhotoEdit}
-                data-testid="button-photo-edit-save"
-              >
+  className="flex-1 rounded-2xl bg-gradient-to-r from-yellow-400 to-yellow-500 hover:from-yellow-400 hover:to-yellow-500"
+  onClick={() => {
+  setTempMusicUrl(musicUrl)
+  setIsMusicDialogOpen(true)
+  }}
+  data-testid="button-music-apply"
+>
                 <Check className="mr-2 h-4 w-4" />
                 Simpan
               </Button>
